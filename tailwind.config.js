@@ -10,6 +10,9 @@ module.exports = {
         lightgrayishcyan: "hsl(185, 41%, 84%)",
         verylightgrayishcyan: "hsl(189, 41%, 97%)",
       },
+      fontFamily: {
+        monospace: ["Space mono", "monospace"],
+      },
     },
   },
   plugins: [],
