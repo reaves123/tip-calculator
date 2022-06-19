@@ -4,9 +4,9 @@ import { useState } from "react";
 
 function App() {
   const [bill, setBill] = useState(0);
-  const [people, setPeople] = useState(0);
+  const [people, setPeople] = useState(1);
   const [tip, setTip] = useState(0);
-  const [customTip, setCustomTip] = useState("Custom");
+  const [customTip, setCustomTip] = useState("Custom%");
   const [selectedTip, setSelectedTip] = useState("");
 
   const handleTip = (percent) => {
@@ -41,16 +41,23 @@ function App() {
     }
   };
 
+  const handleReset = () => {
+    setSelectedTip("");
+    setTip(0);
+    setPeople(0);
+    setBill(0);
+    setCustomTip("Custom%");
+  };
+
   return (
     <div className="bg-lightgrayishcyan flex flex-col h-full justify-center items-center font-monospace font-bold">
       <div className="py-8">
-        <h1 className="uppercase tracking-widest text-2xl">
-          spli
-          <br />
-          tter
+        <h1 className="uppercase tracking-widest text-2xl text-darkgrayishcyan">
+          s p l i
+          <br />t t e r
         </h1>
       </div>
-      <div className="bg-white w-full h-full px-7 py-6 rounded-t-3xl grid grid-cols-1 xl:grid-cols-2">
+      <div className="bg-white w-full max-w-4xl px-7 py-6 rounded-t-3xl grid grid-cols-1 gap-8 xl:grid-cols-2 lg:rounded-3xl">
         <div className="space-y-6">
           <div className="space-y-1">
             <h3>Bill</h3>
@@ -68,12 +75,12 @@ function App() {
           </div>
           <div className="space-y-3">
             <h3>Select Tip %</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
               <button
                 className={
-                  "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan" +
-                    selectedTip ===
-                    5 && +"bg-strongcyan"
+                  selectedTip !== 5
+                    ? "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                    : "bg-strongcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
                 }
                 onClick={(e) => handleTip(5)}
               >
@@ -82,45 +89,69 @@ function App() {
               <button
                 onClick={(e) => handleTip(10)}
                 className={
-                  "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan" +
-                    selectedTip ===
-                    10 && +"bg-strongcyan"
+                  selectedTip !== 10
+                    ? "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                    : "bg-strongcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
                 }
               >
                 10%
               </button>
               <button
                 onClick={(e) => handleTip(15)}
-                className="bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                className={
+                  selectedTip !== 15
+                    ? "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                    : "bg-strongcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                }
               >
                 15%
               </button>
               <button
                 onClick={(e) => handleTip(25)}
-                className="bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                className={
+                  selectedTip !== 25
+                    ? "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                    : "bg-strongcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                }
               >
                 25%
               </button>
               <button
                 onClick={(e) => handleTip(50)}
-                className="bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                className={
+                  selectedTip !== 50
+                    ? "bg-darkcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                    : "bg-strongcyan text-white text-2xl rounded-md py-3 hover:bg-strongcyan"
+                }
               >
                 50%
               </button>
-              <div className="bg-darkcyan text-white text-2xl rounded-md py-3 text-center">
+              <div
+                className={
+                  selectedTip !== "custom"
+                    ? "bg-darkcyan text-strongcyan text-2xl rounded-md py-3 hover:bg-verylightgrayishcyan"
+                    : "bg-verylightgrayishcyan text-2xl rounded-md py-3 flex justify-center"
+                }
+              >
                 <input
-                  type="text"
-                  defaultValue={"Custom %"}
+                  type="number"
                   className={
-                    "w-5/6 bg-darkcyan text-center focus:bg-darkgrayishcyan outline-none rounded-md"
+                    selectedTip == "custom"
+                      ? "w-full placeholder-strongcyan placeholder:text-lg bg-transparent rounded-md text-end outline outline-2"
+                      : "w-full placeholder-strongcyan placeholder:text-lg bg-transparent text-center outline-none rounded-md"
                   }
-                  onFocus={(e) => setCustomTip("")}
-                  onChange={(e) => setCustomTip(e.target.value)}
+                  onFocus={(e) => {
+                    setCustomTip("");
+                    setSelectedTip("custom");
+                  }}
+                  onChange={(e) => {
+                    setCustomTip(e.target.value);
+                    setTip(e.target.value);
+                  }}
                   value={customTip}
+                  placeholder={"Custom %"}
                 />
               </div>
-
-              <p>{selectedTip}</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -148,26 +179,30 @@ function App() {
           </div>
         </div>
         <div>
-          <div className="bg-darkcyan p-5 rounded-xl space-y-4">
-            <div className="flex justify-between items-center text-darkgrayishcyan">
-              <div>
-                <h3 className="text-white font-bold">Tip Amount</h3>
-                <p>/ person</p>
+          <div className="bg-darkcyan p-5 rounded-xl flex flex-col lg:h-full lg:justify-between lg:px-8 py-10">
+            <div className="space-y-4 pb-4 lg:space-y-8">
+              <div className="flex justify-between items-center text-darkgrayishcyan">
+                <div>
+                  <h3 className="text-white font-bold">Tip Amount</h3>
+                  <p>/ person</p>
+                </div>
+                <p className="text-strongcyan text-3xl lg:text-5xl">
+                  ${people > 0 ? (((bill / 100) * tip) / people).toFixed(2) : 0}
+                </p>
               </div>
-              <p className="text-strongcyan text-3xl">
-                ${people > 0 ? (((bill / 100) * tip) / people).toFixed(2) : 0}
-              </p>
-            </div>
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="text-white font-bold">Tip Total</h3>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-white font-bold">Tip Total</h3>
+                </div>
+                <p className="text-strongcyan text-3xl lg:text-5xl">
+                  ${((bill / 100) * tip).toFixed(2)}
+                </p>
               </div>
-              <p className="text-strongcyan text-3xl">
-                ${((bill / 100) * tip).toFixed(2)}
-              </p>
             </div>
-            <div className="w-full bg-strongcyan text-darkcyan font-bold rounded-md text-center py-2">
-              <button>RESET</button>
+            <div className="w-full bg-strongcyan text-darkcyan font-bold rounded-md text-center py-2 lg:text-2xl">
+              <button className="w-full h-full" onClick={handleReset}>
+                RESET
+              </button>
             </div>
           </div>
         </div>
